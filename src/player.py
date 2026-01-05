@@ -7,6 +7,9 @@ class player:
         self.damage = damage
         self.health = health
         self.scale = scale
+        self.HEALTH_BAR_WIDTH = 200
+        self.HEALTH_BAR_HEIGHT = 20
+        self.HEALTH_BAR_OFFSET_Y = 60
         self.animations = {}
 
         # Preload all animations
@@ -52,3 +55,31 @@ class player:
             self.current_frame = 0
             self.anim_counter = 0
             self.image = self.frames[self.current_frame]
+    def draw_health_bar(self, window):
+        # Calculate health ratio
+        health_ratio = self.health / 100  # if max health is 100
+        bar_width = int(self.HEALTH_BAR_WIDTH * health_ratio)
+
+        # Background (red)
+        pygame.draw.rect(
+            window,
+            (255, 0, 0),
+            (self.x, self.y + self.HEALTH_BAR_OFFSET_Y, self.HEALTH_BAR_WIDTH, self.HEALTH_BAR_HEIGHT)
+        )
+
+        # Foreground (green)
+        pygame.draw.rect(
+            window,
+            (0, 255, 0),
+            (self.x, self.y + self.HEALTH_BAR_OFFSET_Y, bar_width, self.HEALTH_BAR_HEIGHT)
+        )
+
+        # Optional: border
+        pygame.draw.rect(
+            window,
+            (0, 0, 0),
+            (self.x, self.y + self.HEALTH_BAR_OFFSET_Y, self.HEALTH_BAR_WIDTH, self.HEALTH_BAR_HEIGHT),
+            2  # thickness
+        )
+    def attack(self,target):
+        target.health -= self.damage
